@@ -27,3 +27,10 @@ ruby htmlsync.rb -td <同期元ディレクトリ> <同期先ディレクトリ>
 　　デバッグモードで実行する。
 
 ◎制限事項
+
+
+◎その他メモ
+* ZipFileUtilsはgemsでインストール必要。
+* EXEを生成する場合、Exerbのインストールが必要
+　　http://doruby.kbmj.com/saronpasu_on_rails/20080609/Ruby_Exe_
+　を参考に。
