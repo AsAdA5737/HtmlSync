@@ -18,6 +18,7 @@
 特定のディレクトリにHtmlSync.x.y.z.zipを解凍する。
 
 ◎インストール
+特になし。
 
 ◎使い方
 ruby htmlsync.rb -td <同期元ディレクトリ> <同期先ディレクトリ>
@@ -34,3 +35,10 @@ ruby htmlsync.rb -td <同期元ディレクトリ> <同期先ディレクトリ>
 * EXEを生成する場合、Exerbのインストールが必要
 　　http://doruby.kbmj.com/saronpasu_on_rails/20080609/Ruby_Exe_
 　を参考に。
+
+◎TODO
+・変更箇所がなければ同期しないようにする。
+・同期したファイルを標準出力に表示する。
+・バックアップ時にすでにファイルが存在していれば、別名で保存するようにする。
+　# backup.zip,backup_2.zip,backup_3.zip...
+　古い世代のファイルは、削除する。（数字が小さい方が新しい）
