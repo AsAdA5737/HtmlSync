@@ -57,13 +57,19 @@ module HtmlSync
     # 同期を取る。
     def sync()
       @syncHash.each{|srcfile,dstfile|
-        
-        $logger.info("sync #{@srcDir}/#{srcfile} --> #{@dstDir}/#{dstfile}");        
         srcHtml = @parser.parseHtml( readHtml(@srcDir+"/"+srcfile) );
         dstHtml = @parser.parseHtml( readHtml(@dstDir+"/"+dstfile) );
         
+        # 同期対象の文字列を比較する。
+        # 同じ文字列であれば、比較せずそのファイルをスキップする。
+        if (srcHtml.syncStr == dstHtml.syncStr)
+          $logger.info("skip : #{@srcDir}/#{srcfile} , #{@dstDir}/#{dstfile} has same contens ");        
+          next;
+        end
+        
         dstHtml.syncStr = srcHtml.syncStr;
         
+        $logger.info("sync : #{@srcDir}/#{srcfile} --> #{@dstDir}/#{dstfile}");
         # テストモードであった場合、ファイルへの書き込みを実行しない。
         writeHtml(@dstDir+"/"+dstfile,dstHtml.to_s()) if (!@dryrun);
       }       

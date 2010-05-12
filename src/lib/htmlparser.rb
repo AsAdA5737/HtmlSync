@@ -13,12 +13,8 @@ module HtmlSync
     # HTMLファイルを解析する
     def parseHtml(htmlStr)
       
-      html = Html.new();
-      
+      html = Html.new();      
       html.srcTxt = htmlStr;
-      # open(htmlFilePath,"r"){|io|
-      #  html.srcTxt = io.readlines().join();
-      #}
       
       # 正規表現で、同期する部分の文字列をチェックする
        %r|(.*)(<!--\s*#{@startTag}\s*-->.*<!--\s*#{@endTag}\s*-->)(.*)|m =~ htmlStr;
