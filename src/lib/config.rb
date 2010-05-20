@@ -5,17 +5,16 @@ module HtmlSync
 
   # 同期先ディレクトリ  
   DST_DIR="./dst";
-    
+  
   # 同期を取るファイルの関連を表す。
   # 同期元ファイル名→同期先ファイル名を表す。
-  SYNCFILES = 
-    {"kankyo.html"=>"kankyo.html",
-     "index.html"=>"index.html"
-    }
+  SYNCFILES = {"kankyo.html"=>"kankyo.html", "index.html"=>"index.html" }
 
-  # 設定ファイル名
   CONF_FILE_NAME="htmlsync.cfg";
-        
+  
+  # 設定情報を保持するHashを返却する。
+  # hash[:syncInf] →　同期対象ファイル情報を保持する。
+  # hash[:appInf] → アプリケーション実行に関する情報を保持する
   def LoadConfig(file=CONF_FILE_NAME)
     syncInf = Hash.new();
     appInf = Hash.new();

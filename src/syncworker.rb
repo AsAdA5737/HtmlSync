@@ -1,8 +1,10 @@
+require 'pathname' 
+
 module HtmlSync
   
   class Syncworker
     
-    attr_accessor :srcDir,:dstDir;
+    attr_accessor :srcDir,:dstDir,:backUp;
     
     def initialize(srcDir,dstDir)
       
@@ -11,17 +13,26 @@ module HtmlSync
       @syncHash = nil;
       @parser = HtmlSync::Parser.new();
       @dryrun = false;
-      
+      @backUp = AUtility::Backup.new();
       HtmlSync::Utility.fileExist?(@srcDir);
-      HtmlSync::Utility.fileExist?(@dstDir);
-      
+      HtmlSync::Utility.fileExist?(@dstDir);      
     end
     
     # バックアップを実行する
     def backup()
       $logger.debug("file backup");
-      ZipFileUtils.zip(@srcDir,"#{@srcDir}.back.zip")
-      ZipFileUtils.zip(@dstDir,"#{@dstDir}.back.zip")
+
+      # No arguments should be given; the old behaviour is *obsoleted*. 
+      #
+      #def realpath
+      #  path = @path
+      #       :
+      #  prefix, *names = realpath_rec(prefix, names, {})
+      #  self.class.new(prepend_prefix(prefix, File.join(*names)))
+      #end
+      # 廃止になっているっぽい。
+            
+      @backUp.addFiles([Pathname.new(@srcDir),Pathname.new(@dstDir)]).backup() if (!@dryrun);
       $logger.debug("backup OK");
       return self;
     end

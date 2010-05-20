@@ -1,24 +1,27 @@
 #!/usr/bin/ruby
 #
-# for mac, install modules
-#   rubyzip
-#     -> sudo port install rb-zip
-#   rubygems
+# 必要モジュール
+# * rubyzip
+#   for mac, install modules
 #     -> sudo port install rb-rubygems
-# for windows 
-#   rubyzip
+#     -> sudo port install rb-zip
+#   for windows 
 #     -> gem install rubyzip
-
+# * tempdir
+#   for windows 
+#     -> gem install tempdir
+#   
+# 
 # メモ
 # 　Invalid char \273\ in expressionと出る場合
 # 　http://www.skymerica.com/blog/yotsumoto/arch/2007/05/08/000765.html
-
-# バージョン履歴
+#   
+# バージョン履歴(1.X:Xが奇数だと、テスト版、偶数になると安定版とする)
 # 1.0.0 : 初版
 # 1.1.0 : 出力強化、テストモード時バックアップを取らないように変更
-# 
+# 1.1.1 : 世代バックアップをとるよう実装変更
 
-Version="1.1.0";
+Version="1.1.1";
 
 $LOAD_PATH << File.join(File.dirname(__FILE__),"lib");
 
@@ -30,6 +33,7 @@ require 'config'
 require 'utility'
 require 'syncworker'
 require 'ZipFileUtils'
+require 'backup'
 
 # Optionを解析する
 def parseOption(argv)
@@ -77,17 +81,19 @@ $logger.info("================================");
 # 設定情報を読み出す。
 cfgHash = HtmlSync::LoadConfig();
 
-begin 
+begin
   syncworker = HtmlSync::Syncworker.new(cfgHash[:appInf][:SRC_DIR],cfgHash[:appInf][:DST_DIR]);
-  syncworker.backup(); # ファイルをバックアップ
-  syncworker.dryrun() if (props[:dry_run]); # テストモードセット
+  syncworker.backUp.genNum = cfgHash[:appInf][:BACKUP_GEN].to_i();  # バックアップ世代数をセット
   
+  syncworker.dryrun() if (props[:dry_run]); # テストモードセット
+  syncworker.backup(); # バックアップ実行
+
   if (File.exist?(File::expand_path(HtmlSync::CONF_FILE_NAME)))
     syncworker.setSyncFiles(cfgHash[:syncInf]).sync(); # 設定ファイルから読み込んで同期実行
   else
     syncworker.setSyncFiles(HtmlSync::SYNCFILES).sync(); #ソース内部のデフォルト値を利用して同期実行
   end
-
+  
   $logger.info("Finished");
 rescue Exception => ex
   $logger.error("Error Occurred.");
